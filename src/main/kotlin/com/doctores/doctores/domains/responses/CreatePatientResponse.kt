@@ -1,13 +1,13 @@
 package com.doctores.doctores.domains.responses
 
 import java.time.Instant
-data class CreateDoctorResponse(
-    val idDoctor: Long,
+
+class CreatePatientResponse (
+    val idPatient: Long,
     val nombre: String,
     val apellido: String,
-    val especialidad: String,
-    val consultorio: Long,
-    val correo: String?,
+    val identificacion: String,
+    val telefono: Long,
     val createAt: Instant?,
     val updatedAt: Instant?
 )

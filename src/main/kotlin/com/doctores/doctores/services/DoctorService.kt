@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.Instant
 import com.doctores.doctores.domains.entity.Doctor
+import org.springframework.http.ResponseEntity
 
 @Service
 class DoctorService {
@@ -29,36 +30,39 @@ class DoctorService {
             especialidad = request.especialidad,
             correo = request.correo,
             consultorio = request.consultorio,
-            createAt = Instant.now()
+            createAt = Instant.now(),
+            updatedAt = Instant.now()
         )
     }
 
     fun getAllDoctors(): List<CreateDoctorResponse>{
-        var response : List<CreateDoctorResponse> = listOf(
+        val response : List<CreateDoctorResponse> = listOf(
             CreateDoctorResponse(
                 idDoctor = 1,
-                nombre = "test",
+                nombre = "test2",
                 apellido = "test",
                 especialidad = "test",
                 correo = "test",
                 consultorio = 123,
-                createAt = Instant.now()
+                createAt = Instant.now(),
+                updatedAt = Instant.now()
             )
         )
         return response
     }
 
     fun getDoctorById(id: Long): CreateDoctorResponse {
-        var doctor: Doctor? =  doctorRepository.getByDoctorId(id)
+        val doctor: Doctor? =  doctorRepository.getByDoctorId(id)
         if (doctor!=null){
             return CreateDoctorResponse(
                 idDoctor = doctor.idDoctor,
-                nombre = "test",
-                apellido = "test",
-                especialidad = "test",
-                correo = "test",
-                consultorio = 123,
-                createAt = Instant.now()
+                nombre = doctor.nombre,
+                apellido = doctor.apellido,
+                especialidad = doctor.especialidad,
+                correo = doctor.correo,
+                consultorio = doctor.consultorio,
+                createAt = Instant.now(),
+                updatedAt = Instant.now()
             )
         }else{
             return CreateDoctorResponse(
@@ -68,7 +72,8 @@ class DoctorService {
                 especialidad = "test",
                 correo = "test",
                 consultorio = 123,
-                createAt = Instant.now()
+                createAt = Instant.now(),
+                updatedAt = Instant.now()
             )
         }
 
@@ -76,15 +81,50 @@ class DoctorService {
 
     }
 
-    fun updateDoctor(id: Long): CreateDoctorResponse{
+    fun updateDoctor(id: Long, request: CreateDoctorRequest): CreateDoctorResponse {
+        val existingDoctor: Doctor? = doctorRepository.getByDoctorId(id)
+        if (existingDoctor == null) {
+            return CreateDoctorResponse(
+                    idDoctor = 1,
+                    nombre = "test",
+                    apellido = "test",
+                    especialidad = "test",
+                    correo = "test",
+                    consultorio = 123,
+                    createAt = Instant.now(),
+                    updatedAt = Instant.now(),
+
+            )
+        }
+        existingDoctor.nombre = request.nombre
+        existingDoctor.apellido = request.apellido
+        existingDoctor.especialidad = request.especialidad
+        existingDoctor.correo = request.correo
+        existingDoctor.consultorio = request.consultorio
+
+        val updatedDoctor: Doctor = doctorRepository.save(existingDoctor)
+
         return CreateDoctorResponse(
-            idDoctor = 1,
-            nombre = "test",
-            apellido = "test",
-            especialidad = "test",
-            correo = "test",
-            consultorio = 123,
-            createAt = Instant.now()
+                idDoctor = updatedDoctor.idDoctor,
+                nombre = updatedDoctor.nombre,
+                apellido = updatedDoctor.apellido,
+                especialidad = updatedDoctor.especialidad,
+                correo = updatedDoctor.correo,
+                consultorio = updatedDoctor.consultorio,
+                createAt = Instant.now(),
+                updatedAt = Instant.now()
         )
     }
+
+    fun deleteDoctorById(id: Long) :ResponseEntity<String> {
+
+        if (doctorRepository.existsById(id)) {
+            doctorRepository.deleteById(id)
+            return ResponseEntity.ok("Registro eliminado correctamente")
+        } else {
+            return ResponseEntity.notFound().build()
+        }
+    }
+
+
 }
