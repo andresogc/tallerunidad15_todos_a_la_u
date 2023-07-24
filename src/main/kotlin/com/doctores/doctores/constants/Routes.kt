@@ -17,6 +17,7 @@ const val DeleteDoctor = "$Doctor/{id}"
 const val CreateAppointments = "$Appointment/create"
 const val GetAppointmentById = "$Appointment/{id}"
 const val UpdateAppointment = "$Appointment/{id}"
+const val DeleteAppointment = "$Appointment/{id}"
 
 
 // Patients

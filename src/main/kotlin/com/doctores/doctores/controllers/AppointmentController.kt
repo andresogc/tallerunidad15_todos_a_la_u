@@ -1,14 +1,15 @@
 package com.doctores.doctores.controllers
 import com.doctores.doctores.constants.*
 import com.doctores.doctores.domains.request.CreateAppointmentRequest
-import com.doctores.doctores.domains.request.CreateDoctorRequest
 import com.doctores.doctores.domains.responses.CreateAppointmentResponse
-import com.doctores.doctores.domains.responses.HealthCheckResponse
-import com.doctores.doctores.services.AppointmentService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import com.doctores.doctores.services.AppointmentService
+import org.springframework.beans.factory.annotation.Autowired
+import  org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.validation.annotation.Validated
 
 @RestController
 class AppointmentController {
@@ -28,4 +29,9 @@ class AppointmentController {
     fun updateAppointment(
         @PathVariable("id") id: Long
     ): CreateAppointmentResponse = appointmentService.updateAppointment(id)
+
+    @DeleteMapping(DeleteAppointment)
+    fun deleteAppointment(
+            @PathVariable("id") id: Long,
+    ): ResponseEntity<String> = appointmentService.deleteAppointmentById(id)
 }
